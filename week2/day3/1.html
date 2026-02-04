@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Types of selectors</title>
+</head>
+<body>
+<div class="ipl">
+    <h1>rohit</h1>
+    <div class="csk">dhoni</div>
+    <h1 id="rcb">virat</h1>
+    <p class="csk" id="rcb">shami</p>
+    <div>
+        <h1>hardik</h1>
+        <p>aman</p>
+        <p>priyanshu</p>
+    </div>
+</div>
+</body>
+<script>
+// 1. get element by id 
+const idE1= document.getElementById("rcb");
+console.log(idE1);
+
+idE1.style.color="red";
+
+// 2. get element by class name
+const classE1= document.getElementsByClassName("csk");
+console.log(classE1[1].innerText);// html collection ka array deta hai 
+
+// 3. get element by tag name
+const tagE1= document.getElementsByTagName("p");
+console.log(tagE1);
+
+// query selector
+const queryE1= document.querySelector(".ipl div>h1+p+p");
+console.log(queryE1);
+ const queryE2= document.querySelectorAll(".ipl h1");
+ console.log(queryE2);
+</script>
+</html>

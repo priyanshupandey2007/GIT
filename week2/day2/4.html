@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get value from input tag</title>
+</head>
+<body>
+    <input type="text" id="myInput" placeholder="type here"/>
+    <button onclick="getValue()">click me</button> 
+</body>
+</html>
+<script>
+    // step-1 select the input element
+    function getValue(){
+        const inputElement = document.getElementById("myInput");
+        // step-2 get the value from input element
+        const value = inputElement.value;
+        console.log(value);
+        alert(value);
+    } 
+</script>
+

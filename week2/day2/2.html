@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get value from HTML element </title>
+</head>
+<body>
+    <div id="cont">Hello World </div>
+</body>
+</html>
+<script>
+    // step-1 seledt/catch the element from the DOM
+    const element = document.getElementById("cont");
+    console.log(element);  //<div id="cont">welcome to DOM</div> it will show this thing 
+    // step-2 read/ get values from el
+    const data = element.innerText;
+    console.log(data);   // it will show HELLO WORLD
+    // step-3 write/update values to the el
+    element.innerText = "welcome to DOM"
+</script>

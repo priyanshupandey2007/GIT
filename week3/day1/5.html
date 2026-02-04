@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NoiseTrace PRO</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+body{margin:0;font-family:Segoe UI;background:#020617;color:#fff;padding:15px}
+h1{text-align:center;color:#38bdf8}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px}
+.card{background:#0f172a;padding:15px;border-radius:12px}
+button{padding:10px;width:100%;background:#38bdf8;border:none;border-radius:6px;font-weight:bold;cursor:pointer}
+#meter{height:25px;background:#1e293b;border-radius:10px;overflow:hidden}
+#bar{height:100%;width:0%;background:linear-gradient(90deg,green,yellow,red)}
+#map{height:300px;border-radius:10px}
+.log{background:#1e293b;padding:6px;border-radius:6px;margin-top:5px;font-size:13px}
+.draggable{cursor:grab}
+.draggable:active{cursor:grabbing}
+.drag-over{border:2px dashed #38bdf8}
+.stat{margin-top:6px;color:#38bdf8;font-weight:bold}
+</style>
+</head>
+
+<body>
+
+<h1>🔊 NoiseTrace PRO – Urban Noise Mapper</h1>
+
+<div class="grid" id="grid">
+
+<div class="card draggable" draggable="true">
+<h3>Live Noise</h3>
+<button onclick="startMic()">Start Microphone</button>
+<p>Decibel: <span id="db">0</span></p>
+<div id="meter"><div id="bar"></div></div>
+<p id="alert"></p>
+<br>
+<button onclick="savePoint()">Save Noise Point</button>
+<div class="stat">Avg: <span id="avg">0</span></div>
+<div class="stat">Max: <span id="max">0</span></div>
+</div>
+
+<div class="card draggable" draggable="true">
+<h3>Noise Map</h3>
+<div id="map"></div>
+</div>
+
+<div class="card draggable" draggable="true">
+<h3>History</h3>
+<div id="history"></div>
+</div>
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+let audioContext, analyser, dataArray;
+let currentDb=0,map,lat,lng;
+let points=JSON.parse(localStorage.getItem("noisetrace_pro"))||[];
+
+navigator.geolocation.getCurrentPosition(pos=>{
+  lat=pos.coords.latitude;
+  lng=pos.coords.longitude;
+  initMap();
+});
+
+function initMap(){
+  map=L.map('map').setView([lat,lng],13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
+  points.forEach(p=>drawPoint(p));
+}
+
+function startMic(){
+  navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+    audioContext=new AudioContext();
+    analyser=audioContext.createAnalyser();
+    const source=audioContext.createMediaStreamSource(stream);
+    source.connect(analyser);
+    analyser.fftSize=256;
+    dataArray=new Uint8Array(analyser.frequencyBinCount);
+    updateMeter();
+  });
+}
+
+function updateMeter(){
+  analyser.getByteFrequencyData(dataArray);
+  let avg=dataArray.reduce((a,b)=>a+b,0)/dataArray.length;
+  currentDb=Math.round(avg);
+  db.innerText=currentDb;
+  bar.style.width=Math.min(currentDb,100)+"%";
+
+  if(currentDb>70){alertBox("⚠ Too Loud!");}
+  else if(currentDb>40){alertBox("🔔 Moderate Noise");}
+  else{alertBox("✅ Safe Zone");}
+
+  requestAnimationFrame(updateMeter);
+}
+
+function alertBox(msg){alert.innerText=msg;}
+
+function savePoint(){
+  if(!lat)return;
+  let p={lat,lng,db:currentDb,time:new Date().toLocaleTimeString()};
+  points.push(p);
+  localStorage.setItem("noisetrace_pro",JSON.stringify(points));
+  drawPoint(p);
+  renderHistory();
+}
+
+function drawPoint(p){
+  let color=p.db<30?"green":p.db<60?"orange":"red";
+  L.circle([p.lat,p.lng],{radius:50,color:color,fillOpacity:.5})
+   .addTo(map).bindPopup(`🔊 ${p.db} dB<br>${p.time}`);
+}
+
+function renderHistory(){
+  history.innerHTML="";
+  let sum=0,max=0;
+  points.slice().reverse().forEach(p=>{
+    history.innerHTML+=`<div class="log">${p.time} → ${p.db} dB</div>`;
+    sum+=p.db;
+    if(p.db>max)max=p.db;
+  });
+  avg.innerText=points.length?Math.round(sum/points.length):0;
+  maxEl.innerText=max;
+}
+
+const maxEl=document.getElementById("max");
+
+// --- DRAG ---
+const draggables=document.querySelectorAll('.draggable');
+const grid=document.getElementById('grid');
+let dragItem=null;
+
+draggables.forEach(card=>{
+  card.addEventListener('dragstart',()=>{dragItem=card;setTimeout(()=>card.style.display="none",0);});
+  card.addEventListener('dragend',()=>{setTimeout(()=>{dragItem.style.display="block";dragItem=null;},0);});
+  card.addEventListener('dragover',e=>{e.preventDefault();card.classList.add("drag-over");});
+  card.addEventListener('dragleave',()=>card.classList.remove("drag-over"));
+  card.addEventListener('drop',()=>{card.classList.remove("drag-over");grid.insertBefore(dragItem,card);});
+});
+
+renderHistory();
+</script>
+</body>
+</html>
