@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Localstorage</title>
+</head>
+<body>
+    <h1>All you need to know about Localstorage</h1>
+    
+</body>
+</html>
+<script>
+    // 1. Write /save/set in Localstorage
+    localStorage.setItem("name","Priyanshu");
+    localStorage.setItem("id",23);
+    localStorage.setItem("status",true);
+
+    // 2. read/get/access
+    const nm = localStorage.getItem("name");
+    console.log(nm);
+
+    // 3. update item
+    localStorage.setItem("name","Priyanshu Pandey");
+
+    // 4. remove item
+    // localStorage.removeItem("id");
+
+    // 5. clear all
+    // localStorage.clear();
+</script>

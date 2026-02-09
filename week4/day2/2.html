@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>hello</h1>
+</body>
+</html>
+<script>
+    localStorage.setItem("hobby",JSON.stringify([1,2,3,4,5]));
+    let hb = JSON.parse(localStorage.getItem("hobby"));
+    console.log(hb[1], typeof hb)
+
+    localStorage.setItem("obj",JSON.stringify({a:1}))
+</script>
