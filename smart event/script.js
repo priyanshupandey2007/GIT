@@ -48,7 +48,7 @@ clearBtn.onclick = function() {
 sampleBtn.onclick = function() {
     const sample = document.createElement('div');
     sample.className = 'event-item';
-    sample.innerHTML = `<h3>Sample Meeting</h3><p>2024-12-01</p><button class="delete-btn">Delete</button>`;
+    sample.innerHTML = `<h3>DOM Manipulation </h3><p>2026-5-02</p><button class="delete-btn">Delete</button>`;
     list.appendChild(sample);
     if(list.querySelector('.empty-msg')) list.querySelector('.empty-msg').remove();
 };
