@@ -41,5 +41,3 @@
 
 // promises -> A promises is an object that may produce a single value some time in the future: either a resolved value or a reason that it's not resolved that it's not resolved 
 // 3 states of promises :   pending , fullfilled , rejected
-
- 
