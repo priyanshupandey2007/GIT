@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Weather Flow Monitor</title>
+
+<style>
+body {
+    margin: 0; /*   ye browser ke defualt margin ko hata dega */
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #4c1d95, #0f766e);  
+    display: flex;
+    justify-content: center;
+    padding: 30px;
+    color: white;
+}
+
+.app {
+    width: 100%;
+    max-width: 750px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.panel {
+    background: white;
+    color: #222;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+input {
+    padding: 12px;
+    width: 65%;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 12px 16px;
+    background: #0ea5e9;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #0284c7;
+}
+
+.history-btn {
+    background: #14b8a6;
+    margin: 5px 5px 0 0;
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 25px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px dashed #ddd;
+}
+
+.monitor {
+    background: #111827;
+    color: #9ca3af;
+    padding: 15px;
+    border-radius: 8px;
+    font-family: monospace;
+    height: 140px;
+    overflow-y: auto;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<h1> Weather Flow Monitor</h1>
+
+<div class="panel">
+    <h3>Search City</h3>
+    <input type="text" id="cityInput" placeholder="Type city name...">
+    <button id="searchBtn">Check Weather</button>
+
+    <h4 style="margin-top:20px;">Previous Searches</h4>
+    <div id="historyList"></div>
+</div>
+
+<div class="panel">
+    <h3>Weather Details</h3>
+    <div id="weatherOutput">
+        <p style="text-align:center;color:#777;">No city selected</p>
+    </div>
+</div>
+
+<div class="panel">
+    <h3>Execution Flow Monitor (Event Loop)</h3>
+    <div id="logArea" class="monitor"></div>
+</div>
+
+</div>
+
+<script>
+
+const cityInput = document.getElementById("cityInput");  //ye input ko js mein store karega taki baad mien vo isse value le sake
+const weatherOutput = document.getElementById("weatherOutput"); //same as above
+const logArea = document.getElementById("logArea"); //same as above
+const historyList = document.getElementById("historyList"); //same as above
+
+const STORAGE_KEY = "weather_flow_history";
+
+const predefinedCities = {  // ye predefined data hai jo hamne pehle se hi likh rakha hai 
+    delhi: { name: "Delhi", max: "35°C", min: "24°C", humidity: "50%", wind: "12 km/h" },
+    jaipur: { name: "Jaipur", max: "33°C", min: "21°C", humidity: "40%", wind: "9 km/h" },
+    pune: { name: "Pune", max: "29°C", min: "20°C", humidity: "55%", wind: "11 km/h" }
+};  
+
+function logMessage(msg) {
+    logArea.innerHTML += `<div>> ${msg}</div>`;
+    logArea.scrollTop = logArea.scrollHeight;
+}
+
+async function getCityWeather(city) {  //aysnc function se hum fetch API use krke website se data le rhe hai aur asyncki wajah se
+    //hum awake bhi usekr sakte hai jisse hum uss line ka code baad mein run ho bina pure code ko block kiye 
+
+    const cityName = city.toLowerCase().trim();
+    logArea.innerHTML = "";
+
+    logMessage(" Synchronous Execution Started");
+
+    Promise.resolve().then(() => 
+        logMessage(" Microtask Queue Executed (Promise.then)")
+    );
+
+    setTimeout(() => 
+        logMessage(" Macrotask Queue Executed (setTimeout)")
+    , 0);
+
+    logMessage(" Async Operation Initiated");
+
+    try {
+
+        if (!cityName) throw new Error("City name cannot be empty!");
+
+        let data;
+
+        if (predefinedCities[cityName]) {
+            data = predefinedCities[cityName];
+            await new Promise(resolve => setTimeout(resolve, 700));
+        } else {
+
+            const response = await fetch(
+                `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=8d90f23071379f824e8a4a589574889c`
+            );
+
+            if (!response.ok) throw new Error("City not found!");
+
+            const result = await response.json();
+
+            data = {
+                name: result.name,
+                max: result.main.temp_max + "°C",
+                min: result.main.temp_min + "°C",
+                humidity: result.main.humidity + "%",
+                wind: result.wind.speed + " m/s"
+            };
+        }
+
+        displayWeather(data);
+        saveSearchHistory(data.name);
+
+        logMessage(" Async Data Successfully Received");
+
+    } catch (error) {
+
+        weatherOutput.innerHTML = 
+            `<p style="color:red;text-align:center;">${error.message}</p>`;
+
+        logMessage(" Error: " + error.message);
+    }
+
+    logMessage(" Synchronous Execution Ended");
+}
+
+function displayWeather(data) {
+    weatherOutput.innerHTML = `
+        <div class="info-row"><b>City</b> <span>${data.name}</span></div>
+        <div class="info-row"><b>Max Temp</b> <span>${data.max}</span></div>
+        <div class="info-row"><b>Min Temp</b> <span>${data.min}</span></div>
+        <div class="info-row"><b>Humidity</b> <span>${data.humidity}</span></div>
+        <div class="info-row"><b>Wind Speed</b> <span>${data.wind}</span></div>
+    `;
+}
+
+function saveSearchHistory(city) {
+    let history = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+    if (!history.includes(city)) {
+        history.push(city);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+        renderHistory();
+    }
+}
+
+function renderHistory() {
+    let history = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    historyList.innerHTML = "";
+
+    history.forEach(city => {
+        const btn = document.createElement("button");
+        btn.className = "history-btn";
+        btn.innerText = city;
+        btn.onclick = () => getCityWeather(city);
+        historyList.appendChild(btn);
+    });
+}
+
+document.getElementById("searchBtn").addEventListener("click", () => {
+    getCityWeather(cityInput.value);
+});
+
+window.onload = renderHistory;
+
+</script>
+
+</body>
+</html>
