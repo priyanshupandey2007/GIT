@@ -1,218 +1,210 @@
+<!-- https://home.openweathermap.org/api_keys -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Weather Lab - Async Demo</title>
-
+    <title>Lab 2 - Async Weather Tracker</title>
     <style>
-        body{
-            margin:0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: linear-gradient(to right,#0f2027,#203a43,#2c5364);
-            color:white;
-            padding:30px;
+        /* KEEPING YOUR EXACT UI STYLE */
+        body {
+            background: linear-gradient(#1e3a8a, #0f172a); 
+            color: white;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container { width: 100%; max-width: 800px; }
+        
+        .card {
+            background: white;
+            color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
-        h1{
-            text-align:center;
-            margin-bottom:30px;
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        input { padding: 10px; width: 70%; border-radius: 5px; border: 1px solid #ccc; }
+        button { 
+            padding: 10px; 
+            background: #e67e22; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
         }
 
-        .main-box{
-            max-width:700px;
-            margin:auto;
+        .hist-btn {
+            background: #e67e22;
+            color: white;
+            border: none;
+            margin: 5px 5px 0 0;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
         }
 
-        .panel{
-            background:white;
-            color:#222;
-            padding:20px;
-            border-radius:8px;
-            margin-bottom:20px;
-        }
+        .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+        .row b { color: #555; }
 
-        input{
-            width:65%;
-            padding:8px;
-            border-radius:4px;
-            border:1px solid #aaa;
-        }
-
-        button{
-            padding:8px 12px;
-            border:none;
-            background:#ff7f50;
-            color:white;
-            border-radius:4px;
-            cursor:pointer;
-        }
-
-        .history button{
-            margin:5px 5px 0 0;
-            background:#ff7f50;
-            border-radius:15px;
-            font-size:12px;
-        }
-
-        .info-line{
-            display:flex;
-            justify-content:space-between;
-            padding:6px 0;
-            border-bottom:1px solid #ddd;
-        }
-
-        .console-box{
-            background:black;
-            color:#00ff99;
-            font-family:monospace;
-            padding:10px;
-            height:130px;
-            overflow-y:auto;
-            border-radius:5px;
+        .console {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            height: 120px;
+            overflow-y: auto;
         }
     </style>
 </head>
-
 <body>
 
-<h1> Async Weather Checker</h1>
+    <div class="container">
+        <!-- Added <u> tag for underline -->
+        <h1 style="text-align: center;">☀️ <u>Async Weather Tracker</u></h1>
 
-<div class="main-box">
+        <div class="grid">
+            <!-- LEFT COLUMN -->
+            <div class="card">
+                <h3>Search City</h3>
+                <input type="text" id="cityInput" placeholder="Enter city name...">
+                <button id="searchBtn">Search</button>
+                
+                <hr> <!-- Added horizontal line -->
+                <h4>Search History</h4>
+                <div id="historyList"></div>
+            </div>
 
-     <!-- search -->
-    <div class="panel">
-        <h3>City Search</h3>
-        <input type="text" id="cityInput" placeholder="Type city name">
-        <button id="searchBtn">Get Weather</button>
+            <!-- RIGHT COLUMN -->
+            <div class="card">
+                <h3>Weather Info</h3>
+                <div id="weatherInfo">
+                    <!-- Added <i> for italics -->
+                    <p style="text-align: center; color: #999;"><i>Search a city to see details</i></p>
+                </div>
+            </div>
+        </div>
 
-        <h4>Previous Searches</h4>
-        <div id="historyList" class="history"></div>
-    </div>
-
-    <!-- Weather  -->
-    <div class="panel">
-        <h3>Weather Details</h3>
-        <div id="weatherInfo">
-            <p style="text-align:center;color:gray;">No city selected</p>
+        <!-- BOTTOM CONSOLE -->
+        <div class="card">
+            <h3>Console - Event Loop Analysis</h3>
+            <hr>
+            <div id="logBox" class="console"></div>
         </div>
     </div>
 
-    <!-- answer show   -->
-    <div class="panel">
-        <h3>Event Loop Console</h3>
-        <div id="Box" class="console-box"></div>
-    </div>
-
-</div>
-
-<script>
-
-const predefinedData = {
-    "delhi": { name: "Delhi", max: "35°C", min: "24°C", humidity: "50%", air: "12 km/h" },
-    "indore": { name: "Indore", max: "32°C", min: "22°C", humidity: "45%", air: "10 km/h" },
-    "mumbai": { name: "Mumbai", max: "30°C", min: "27°C", humidity: "85%", air: "20 km/h" },
-    "london": { name: "London", max: "18°C", min: "10°C", humidity: "60%", air: "15 km/h" }
-};
-
-const cityInput = document.getElementById("cityInput");
-const weatherInfo = document.getElementById("weatherInfo");
-const historyList = document.getElementById("historyList");
-const Box = document.getElementById("Box");
-
-function message (msg){
-    Box.innerHTML += "<div>> " + msg + "</div>"; //+= --> purane content ke end me naya content add karta hai
-    Box.scrollTop = Box.scrollHeight; //scroll automatically neeche le jata hai
-}
-
-async function getWeatherData(city){
-
-    const cityName = city.toLowerCase().trim();  // isse agar hum delhi type krte hai to vo automatically usko cappital letters mien kr dega like DELHI aur .trim() jo fltu ki sapce hoga usko hata dega
-    Box.innerHTML = "";  // har new search pr jo event loop console hai usko clear kr dega  
- message ("Sync Execution Started");
-
-    Promise.resolve().then(function(){message  ("Promise.then executed (Microtask)"); // ye ek pre relosved promise hai aur ye hai microtask hai   
-    });
-
-    setTimeout(function(){
-message  ("setTimeout executed (Macrotask)");  // ye ek macrotask hai kyu 0 delay hone ke baad bhi ye promise ke baad run hoga cuz macro hamesa micro ke baad run hota hai
-    },0);
-message  ("Async process started...");
-
-    try{  // ye error handling ka concept hai 
-
-        if(!cityName){
-            throw new Error("City name required"); // agar city name mien hum blanck chd dete hai to ye ERROR show karega ki "city name is required"
+    <script>
+        // Simple function to display logs in our black box
+        function addLog(text) {
+            var logBox = document.getElementById('logBox');
+            logBox.innerHTML = logBox.innerHTML + "<div> > " + text + "</div>";
         }
 
-        let data; 
-
-        if(predefinedData[cityName]){  // ye check karega ki kya jo city humne dali hai vo pre defined mein hai ki nahi 
-            data = predefinedData[cityName]; // hai agar vo pre definedd mein jo vo anser de dega
-            await new Promise(function(r){
-                setTimeout(r,500); // yaha humne 5 second ka delay liya cuz next step mein hum API se data fetch karenge aur data fetch krne mein thoda tinen lagta hai 
-            });
-        }else{
-            const res = await fetch("https://api.openweathermap.org/data/2.5/weather?q="+cityName+"&units=metric&appid=8d90f23071379f824e8a4a589574889c");  //Fetch API se real weather data la raha hai.
-            if(!res.ok){
-                throw new Error("City not found"); // agar humne kuch esa city ka naam likh diya jo exist hi nahi krta to error dikhayega ki "city not found"
+        // The Main Async function for fetching weather
+        async function getWeatherData(city) {
+            var infoDiv = document.getElementById('weatherInfo');
+            var logBox = document.getElementById('logBox');
+            
+            if (city == "") {
+                alert("Please enter a city!");
+                return;
             }
-            const json = await res.json();  // jo bh data aa rha hai usko JSON format mein ocnvert kr rhe hai
-            data = {
-                name: json.name,
-                max: json.main.temp_max+"°C",
-                min: json.main.temp_min+"°C",
-                humidity: json.main.humidity+"%",
-                air: json.wind.speed+" m/s"
-            };  // jo jo bhi feild imp hai vo humne api se nikal ke ek object bana diya hai 
+
+            logBox.innerHTML = ""; // Clear console for new search
+
+            // --- DEMONSTRATING EVENT LOOP ---
+            addLog("1. Sync: Code Started");
+
+            // Macrotask (runs last)
+            setTimeout(function() {
+                addLog("4. Macrotask: setTimeout finished");
+            }, 0);
+
+            // Microtask (runs after sync code)
+            Promise.resolve().then(function() {
+                addLog("3. Microtask: Promise finished");
+            });
+
+            addLog("2. Sync: Fetching from API...");
+
+            try {
+                var apiKey = "919d271dac1bb5318b47f53499249864";
+                var url = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric&appid=" + apiKey;
+                
+                // Using await for fetch
+                var response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error("City not found");
+                }
+
+                var data = await response.json();
+
+                // Updating UI with results
+                infoDiv.innerHTML = `
+                    <div class="row"><b>City</b> <span>${data.name}</span></div>
+                    <div class="row"><b>Temp</b> <span>${data.main.temp}°C</span></div>
+                    <div class="row"><b>Humidity</b> <span>${data.main.humidity}%</span></div>
+                    <div class="row"><b>Wind Speed</b> <span>${data.wind.speed} m/s</span></div>
+                `;
+
+                saveHistory(data.name);
+                addLog("5. Async: Weather data loaded");
+
+            } catch (err) {
+                infoDiv.innerHTML = "<p style='color:red; text-align:center;'>Error: " + err.message + "</p>";
+                addLog("Error occurred: " + err.message);
+            }
         }
 
-        weatherInfo.innerHTML = 
-            '<div class="info-line"><b>City</b><span>'+data.name+'</span></div>'+
-            '<div class="info-line"><b>Max Temp</b><span>'+data.max+'</span></div>'+
-            '<div class="info-line"><b>Min Temp</b><span>'+data.min+'</span></div>'+
-            '<div class="info-line"><b>Humidity</b><span>'+data.humidity+'</span></div>'+
-            '<div class="info-line"><b>Wind</b><span>'+data.air+'</span></div>';
+        // Function to save cities to Local Storage
+        function saveHistory(cityName) {
+            var history = JSON.parse(localStorage.getItem('myHistory')) || [];
+            
+            // If city is not in list, add it
+            if (history.indexOf(cityName) === -1) {
+                history.push(cityName);
+                localStorage.setItem('myHistory', JSON.stringify(history));
+                showHistory();
+            }
+        }
 
-        saveHistory(data.name);
+        // Function to show history buttons
+        function showHistory() {
+            var history = JSON.parse(localStorage.getItem('myHistory')) || ["Delhi", "Mumbai", "London"];
+            var historyList = document.getElementById('historyList');
+            historyList.innerHTML = "";
 
-message  ("Data loaded successfully");
+            // Standard for loop to create buttons
+            for (var i = 0; i < history.length; i++) {
+                var btn = document.createElement('button');
+                btn.className = "hist-btn";
+                btn.innerText = history[i];
+                
+                // Set click for each button
+                let currentCity = history[i];
+                btn.onclick = function() {
+                    getWeatherData(currentCity);
+                };
+                historyList.appendChild(btn);
+            }
+        }
 
-    }catch(err){
-        weatherInfo.innerHTML = '<p style="color:red;text-align:center;">'+ermessage +'</p>';
-message  ("Error: "+message );
-    }
-message  ("Sync Execution Ended");
-}
-
-function saveHistory(city){
-    let history = JSON.parse(localStorage.getItem("weatherHistory")) || [];
-    if(!history.includes(city)){
-        history.push(city);
-        localStorage.setItem("weatherHistory",JSON.stringify(history));
-        displayHistory();
-    }
-}
-
-function displayHistory(){
-    let history = JSON.parse(localStorage.getItem("weatherHistory")) || ["Delhi","Indore","Mumbai","London"];
-    historyList.innerHTML = "";
-    history.forEach(function(city){
-        let btn = document.createElement("button");
-        btn.innerText = city;
-        btn.onclick = function(){
-            getWeatherData(city);
+        // Event listener for the Search button
+        document.getElementById('searchBtn').onclick = function() {
+            var inputVal = document.getElementById('cityInput').value;
+            getWeatherData(inputVal);
         };
-        historyList.appendChild(btn);
-    });
-}
 
-document.getElementById("searchBtn").onclick = function(){
-    getWeatherData(cityInput.value);
-};
+        // Load history when page opens
+        window.onload = showHistory;
 
-window.onload = displayHistory;
-
-</script>
-
+    </script>
 </body>
 </html>
