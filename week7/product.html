@@ -1,3 +1,4 @@
+// Product.html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,7 +7,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chintu Page</title>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
+        select {
+            margin: 20px;
+            padding: 20px;
+        }
+
+        * {
+            text-align: center;
+        }
+
         #root {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -47,10 +59,19 @@
 
 <body>
     <h2>Welcome to Chintu ka Page</h2>
+    <a href="./cart.html">Cart Page</a>
+    <hr>
+    <select onchange="sort()" id="sort">
+        <option value="">Price</option>
+        <option value="asc">asc</option>
+        <option value="dsc">dsc</option>
+    </select>
 
     <div id="root">
         <!-- All product/card come/append here -->
     </div>
+
+
 </body>
 
 </html>
@@ -59,6 +80,8 @@
     //Step -1 Get the Data
 
     const api = "https://fakestoreapi.com/products";
+    let bag = []
+    let cartArr = JSON.parse(localStorage.getItem("cart")) || []
 
     // const data = fetch(api)
     //     .then((res) => res.json())
@@ -69,7 +92,7 @@
     fetch(api)
         .then((res) => res.json())
         .then((data) => {
-
+            bag = data
             console.log(data) // [{},{}]
             displayCart(data);
         }).catch((err) => console.log(err))
@@ -78,6 +101,8 @@
 
     //   Step - 2 display Product on Page 
     function displayCart(arr) {
+
+        document.querySelector("#root").innerText = ""
         arr.forEach((el) => {
             console.log(el);
 
@@ -112,13 +137,49 @@
             price.innerText = `Price: ${el.price}`
 
             const rating = document.createElement("button");
-            rating.innerText = `Rating: ${el.rating.rate}`
+            rating.innerText = `Rating: ${el.rating.rate}`;
 
-            box.append(image, title, category, description, price, rating);
+            const hrr = document.createElement("hr");
+
+            const addToCart = document.createElement("button");
+            addToCart.innerText = "Add To Cart"
+
+            addToCart.addEventListener("click", function () {
+
+                cartArr.push(el);
+                localStorage.setItem("cart", JSON.stringify(cartArr));
+                // alert("Product added to Cart")
+
+                Swal.fire({
+                    title: "Good job!",
+                    text: "Product added to Cart!",
+                    icon: "success"
+                });
+
+            })
+
+            box.append(image, title, category, description, price, rating, hrr, addToCart);
             document.querySelector("#root").append(box)
 
         })
 
     }
 
+
+
+    function sort() {
+        const query = document.querySelector("#sort").value;
+
+        if (query == "asc") {
+            let ascdata = bag.sort((a, b) => a.price - b.price);
+            displayCart(ascdata)
+        } else if (query == "dsc") {
+            let dscdata = bag.sort((a, b) => b.price - a.price);
+            displayCart(dscdata)
+        }
+
+    }
+    // addToCart functionality
+    // attch event then add element into cart key inside localstorage
+    // create a new cart.html page where you get all the cart data from localstorage and display
 </script>
