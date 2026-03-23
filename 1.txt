@@ -1,10 +1,8 @@
-Here are the answers in short and easy language:
-
 1. What is React?
 React is a JavaScript library used to build fast and interactive User Interfaces (UIs) for websites.
 
 2. Who made React?
-It was created by Meta (formerly Facebook).
+It was created by Meta .
 
 3. What is Babel?
 Babel is a tool (compiler) that converts modern JavaScript and JSX code into an older version that all web browsers can understand.
