@@ -1,0 +1,110 @@
+:root {
+  --primary: #4f46e5;
+  --bg-color: #f3f4f6;
+  --card-bg: #ffffff;
+  --text-dark: #111827;
+  --text-light: #6b7280;
+  --pass-color: #059669;
+  --fail-color: #dc2626;
+  --border-color: #e5e7eb;
+}
+
+body {
+  background-color: var(--bg-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 40px 20px;
+}
+
+.app-container {
+  max-width: 650px;
+  margin: 0 auto;
+  background: var(--card-bg);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+header h1 {
+  text-align: center;
+  color: var(--text-dark);
+  margin-bottom: 25px;
+}
+
+/* Form Styles */
+.student-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  padding: 15px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.student-form input {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  flex: 1;
+}
+
+.student-form button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.student-form button:hover {
+  opacity: 0.9;
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 2px solid var(--border-color);
+  color: var(--text-light);
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+td {
+  padding: 15px 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.score-input {
+  width: 60px;
+  padding: 5px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+/* Status Badges */
+.status {
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.status.pass {
+  background-color: #d1fae5;
+  color: var(--pass-color);
+}
+
+.status.fail {
+  background-color: #fee2e2;
+  color: var(--fail-color);
+}
