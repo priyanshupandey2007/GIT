@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lay's Wavy | Official Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-page: #fecba5;
+            --card-main: #ff9a63;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background-color: var(--bg-page);
+            overflow-x: hidden;
+            transition: background-color 0.6s ease;
+        }
+
+        /* --- FULL SCREEN VIEWPORT --- */
+        .hero-viewport {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* THE MAIN FRAME */
+        .main-frame {
+            width: 100%;
+            max-width: 1300px;
+            height: 85vh;
+            background-color: var(--card-main);
+            border-radius: 60px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8%;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.1);
+            transition: background-color 0.6s ease;
+        }
+
+        /* SHARP INNER RINGS (NOT ZOOMED) */
+        .rings-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            background: repeating-radial-gradient(
+                circle at center,
+                rgba(255, 255, 255, 0.1) 0,
+                rgba(255, 255, 255, 0.1) 2px,
+                transparent 2px,
+                transparent 70px
+            );
+        }
+
+        /* NAVIGATION */
+        nav {
+            position: absolute;
+            top: 40px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 60px;
+            z-index: 10;
+        }
+
+        .logo { font-weight: 900; font-size: 32px; color: white; }
+        .nav-links {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 10px 40px;
+            border-radius: 40px;
+            display: flex;
+            gap: 25px;
+        }
+        .nav-links a { text-decoration: none; color: white; font-size: 14px; font-weight: 600; opacity: 0.9; }
+
+        /* CONTENT */
+        .content {
+            width: 40%;
+            color: white;
+            z-index: 5;
+        }
+
+        .content h1 {
+            font-size: 55px;
+            line-height: 1.1;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .price { font-size: 35px; font-weight: 400; margin-bottom: 25px; }
+
+        .qty-row { display: flex; align-items: center; gap: 20px; }
+        .qty {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 700;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .order-btn {
+            background: white;
+            color: var(--card-main);
+            padding: 15px 45px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 900;
+            transition: color 0.5s;
+        }
+
+        /* CENTER PRODUCT IMAGE */
+        .product-display {
+            width: 40%;
+            display: flex;
+            justify-content: center;
+            z-index: 5;
+        }
+
+        #main-bag {
+            width: 450px;
+            /* mix-blend-mode makes the white background of the image disappear */
+            mix-blend-mode: multiply; 
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1));
+            user-select: none;
+        }
+
+        /* RIGHT SIDEBAR FLAVORS */
+        .flavor-sidebar {
+            width: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        .flavor-icon {
+            width: 80px;
+            cursor: pointer;
+            transition: 0.4s;
+            mix-blend-mode: multiply;
+        }
+
+        .flavor-icon:hover {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        /* SCROLL SECTION */
+        .details {
+            height: 100vh;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 900;
+            color: #222;
+        }
+
+    </style>
+</head>
+<body>
+
+    <section class="hero-viewport">
+        <div class="main-frame" id="frame">
+            <div class="rings-bg"></div>
+
+            <nav>
+                <div class="logo">Juig.</div>
+                <div class="nav-links">
+                    <a href="#">Home</a>
+                    <a href="#">Shop</a>
+                    <a href="#">Recipe</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="logo" style="font-size: 20px;">🔍 🛒</div>
+            </nav>
+
+            <div class="content">
+                <h1 id="bag-title">EAT OUR GRILLED POTATO CHIPS</h1>
+                <p class="price" id="bag-price">$5.00</p>
+                <div class="qty-row">
+                    <div class="qty">- 02 +</div>
+                    <a href="#" class="order-btn" id="order-btn">Order Now</a>
+                </div>
+            </div>
+
+            <div class="product-display">
+                <img id="main-bag" src="https://th.bing.com/th/id/OIP.W_UFd4SJ1WfqtOXsmSaS0QHaHa?w=179&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" alt="Lays Original">
+            </div>
+
+            <div class="flavor-sidebar">
+                <!-- Original -->
+                <img class="flavor-icon" src="https://th.bing.com/th/id/OIP.W_UFd4SJ1WfqtOXsmSaS0QHaHa?w=179&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" 
+                     onclick="animateChange('Original', '$5.00', '#ff9a63', '#fecba5', this.src)">
+                
+                <!-- BBQ -->
+                <img class="flavor-icon" src="https://th.bing.com/th/id/OIP.gQlERYkHExAgjv4frLm-owHaHa?w=179&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" 
+                     onclick="animateChange('Hickory BBQ', '$5.50', '#9d2424', '#f58d8d', this.src)">
+                
+                <!-- Sour Cream -->
+                <img class="flavor-icon" src="https://th.bing.com/th/id/OIP.sG5YnQXiB57o0glC5TFESgHaHa?w=167&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" 
+                     onclick="animateChange('Sour Cream', '$6.00', '#3b7d4f', '#a8e6b9', this.src)">
+                
+                <!-- Salt & Vinegar -->
+                <img class="flavor-icon" src="https://th.bing.com/th/id/OIP.jGpcl3OGmawN-8XiAQZNIAHaHa?w=193&h=193&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" 
+                     onclick="animateChange('Salt & Vinegar', '$5.25', '#1e528b', '#8ec3f5', this.src)">
+            </div>
+        </div>
+    </section>
+
+    <section class="details">
+        SCROLL FOR NUTRITION
+    </section>
+
+    <!-- GSAP ANIMATION LIBRARIES -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        function animateChange(name, price, cardColor, bgColor, imgSrc) {
+            // 1. ROLL OUT
+            gsap.to("#main-bag", {
+                x: 600,
+                rotation: 360,
+                opacity: 0,
+                scale: 0.5,
+                duration: 0.5,
+                ease: "power2.in",
+                onComplete: () => {
+                    // Update Text & Image
+                    document.getElementById("main-bag").src = imgSrc;
+                    document.getElementById("bag-title").innerText = "EAT OUR " + name.toUpperCase() + " POTATO CHIPS";
+                    document.getElementById("bag-price").innerText = price;
+                    
+                    // Update Colors
+                    document.getElementById("frame").style.backgroundColor = cardColor;
+                    document.body.style.backgroundColor = bgColor;
+                    document.getElementById("order-btn").style.color = cardColor;
+
+                    // 2. ROLL IN
+                    gsap.fromTo("#main-bag", 
+                        { x: -600, rotation: -360, opacity: 0, scale: 0.5 },
+                        { x: 0, rotation: 0, opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.2)" }
+                    );
+                }
+            });
+        }
+
+        // SCROLL ANIMATION (Frame Shrink)
+        gsap.to("#frame", {
+            scrollTrigger: {
+                trigger: ".hero-viewport",
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            },
+            scale: 0.7,
+            opacity: 0,
+            borderRadius: "200px"
+        });
+    </script>
+</body>
+</html>
