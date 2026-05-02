@@ -1,0 +1,312 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@400;500;600&display=swap');
+
+:root {
+  --cream: #FAF7F2;
+  --charcoal: #1C1C1E;
+  --gold: #C9A84C;
+  --text: #2C2C2E;
+  --text-muted: #7C7C7E;
+  --border: rgba(0,0,0,0.08);
+  --radius: 32px;
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+
+/* ── Auth Screen ── */
+#auth-screen {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #FAF7F2 0%, #E8D5C4 50%, #C9A84C22 100%);
+}
+
+.auth-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 3rem;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.auth-logo {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+}
+
+.auth-tagline {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.google-btn-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border);
+  margin: 0 10px;
+}
+
+.auth-mode-toggle {
+  display: flex;
+  background: #f4f4f5;
+  padding: 4px;
+  border-radius: 14px;
+  margin-bottom: 1.5rem;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 0.6rem;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-family: var(--font-body);
+}
+
+.mode-btn.active {
+  background: white;
+  color: var(--charcoal);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.auth-input-modern {
+  width: 100%;
+  padding: 1.1rem;
+  border: none;
+  background: #f8f8f8;
+  border-radius: 16px;
+  margin-bottom: 0.8rem;
+  outline: none;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+}
+
+.btn-primary-modern {
+  width: 100%;
+  padding: 1.1rem;
+  background: #18181b;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  transition: opacity 0.2s;
+}
+
+.btn-primary-modern:hover {
+  opacity: 0.85;
+}
+
+/* ── App Layout ── */
+#app-screen {
+  min-height: 100vh;
+}
+
+.app-header {
+  background: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.app-logo {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.user-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logout-btn {
+  padding: 0.5rem 1.2rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: background 0.2s;
+}
+
+.logout-btn:hover {
+  background: #f4f4f5;
+}
+
+.nav-bar {
+  background: white;
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+}
+
+.nav-tab {
+  padding: 1rem 1.5rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+
+.nav-tab.active {
+  border-bottom-color: var(--gold);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.content {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── Wardrobe ── */
+.wardrobe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.2rem;
+  margin-top: 1.5rem;
+}
+
+.clothing-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1.2rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  text-align: center;
+}
+
+.add-clothing-form {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.add-clothing-form input,
+.add-clothing-form select {
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  outline: none;
+  flex: 1;
+  min-width: 130px;
+}
+
+.btn-primary {
+  padding: 0.8rem 1.5rem;
+  background: var(--charcoal);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.btn-primary:hover {
+  opacity: 0.85;
+}
+
+/* ── Outfits ── */
+.outfits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.2rem;
+  margin-top: 1.5rem;
+}
+
+.outfit-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.mannequin-container {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem;
+  background: #fafafa;
+}
+
+/* ── Weekly ── */
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1rem;
+}
+
+.day-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  min-height: 160px;
+}
+
+.day-header {
+  background: var(--charcoal);
+  color: white;
+  padding: 0.6rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.day-body {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+}
+
+@media (max-width: 768px) {
+  .week-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .add-clothing-form {
+    flex-direction: column;
+  }
+}
