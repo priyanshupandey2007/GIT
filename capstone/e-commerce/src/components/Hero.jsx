@@ -7,7 +7,7 @@ const Hero = () => {
         <div className="lg:w-1/2">
           <span className="text-indigo-600 font-bold tracking-wider uppercase text-sm">New Arrival 2026</span>
           <h1 className="mt-4 text-5xl font-extrabold text-gray-900 dark:text-white sm:text-6xl tracking-tight">
-            Priyanshu sales  <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600"> Capstone Project </span>
+           archita sales  <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600"> Capstone Project </span>
           </h1>
           <p className="mt-6 text-lg text-gray-600 dark:text-gray-400 max-w-lg">
             Experience the future of technology with our curated collection of high-performance gadgets.
